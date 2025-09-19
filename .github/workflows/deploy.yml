@@ -2,28 +2,39 @@ name: CD to Hugging Face Spaces
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with: { lfs: true, fetch-depth: 0 }
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
 
-      # (Optional) gate on tests before deploy
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - run: pip install -r requirements.txt && pip install pytest
-      - run: pytest -q
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-      - name: Push to Space
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: spaces/ymcaPrabhu/Emotion-Detection-App
         run: |
-          # CHANGE the Space path below if different
-          HF_SPACE="spaces/ymcaPrabhu/Emotion-Detection-App"
           git remote add space https://huggingface.co/${HF_SPACE} || true
           git push https://TOKEN:${HF_TOKEN}@huggingface.co/${HF_SPACE} HEAD:main --force
 
