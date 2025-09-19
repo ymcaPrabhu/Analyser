@@ -37,7 +37,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          HF_SPACE="spaces/ymcaPrabhu/My-First"
+          HF_SPACE="spaces/ymcaPrabhu/Emotion-Detection-App"
           git remote add space "https://huggingface.co/spaces/ymcaPrabhu/Emotion-Detection-App" || true
           git push "https://TOKEN:${HF_TOKEN}@huggingface.co/spaces/ymcaPrabhu/Emotion-Detection-App" HEAD:main --force
 
