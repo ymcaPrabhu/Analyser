@@ -27,6 +27,12 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
         run: pytest -q
 
+       - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+          
       - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
